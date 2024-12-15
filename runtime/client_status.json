@@ -1,0 +1,7 @@
+{
+        "client_status": {
+            "prompt": "Is web client running?",
+            "response": ["yes"],
+            "tv": "Y"
+        }
+    }

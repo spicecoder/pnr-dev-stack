@@ -1,0 +1,9 @@
+{
+  "nodejs_status": {
+    "prompt": "Is NodeJS API ready?",
+    "response": [
+      "yes"
+    ],
+    "tv": "Y"
+  }
+}
