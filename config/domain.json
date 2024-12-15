@@ -3,7 +3,7 @@
     "name": "dev_stack",
     "env": {
         "mongodb": {
-            "url": "mongodb+srv://pronab:Colabdb$123@cluster0.oyr0b2b.mongodb.net/PnR_DB",
+            "url": "your mongodb connection string",
             "options": {
                 "retryWrites": true,
                 "w": "majority"
