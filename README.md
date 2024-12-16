@@ -52,4 +52,3 @@ These are common patterns that would be similar in other languages like Python o
 
 ---
 
-Now you can proceed with the example installation steps we discussed earlier.
