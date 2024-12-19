@@ -1,0 +1,9 @@
+{
+  "api_ready": {
+    "prompt": "Is API server ready?",
+    "response": [
+      "yes"
+    ],
+    "tv": "Y"
+  }
+}

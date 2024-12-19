@@ -1,34 +1,27 @@
-// nodes/mongodb/connection_checker.js
+// connection_checker.js
 const { MongoClient } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 
-// Load configuration
-const config = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '../../config/domain.json'), 'utf8')
-);
-
-const { url, options } = config.env.mongodb;
-const maxAttempts = 30;  // Will try for 30 seconds
-let attempts = 0;
+// Use container name as hostname for MongoDB
+const mongoUrl = "mongodb://pnr_mongodb:27017";  // Using container name instead of localhost
+console.log(`Using MongoDB URL: ${mongoUrl}`);
 
 async function checkConnection() {
     try {
-        console.log(`Attempting to connect to MongoDB at ${url}`);
-        const client = await MongoClient.connect(url, {
-            ...options,
-            serverSelectionTimeoutMS: 1000, // Wait 1 second before timing out
+        console.log(`Attempting to connect to MongoDB at ${mongoUrl}`);
+        const client = await MongoClient.connect(mongoUrl, {
+            serverSelectionTimeoutMS: 1000,
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
         
-        // Verify connection by performing a simple operation
         await client.db().admin().ping();
         await client.close();
         
         // Write success status
         const status = {
-            "mongodb_status": {
+            "mongodb_connected": {
                 "prompt": "Is MongoDB connected?",
                 "response": ["yes"],
                 "tv": "Y"
@@ -36,7 +29,7 @@ async function checkConnection() {
         };
         
         fs.writeFileSync(
-            path.join(__dirname, '../../runtime/mongodb_status.json'),
+            '/runtime/mongodb_status.json',
             JSON.stringify(status, null, 2)
         );
         
@@ -54,5 +47,4 @@ async function checkConnection() {
     }
 }
 
-// Start checking
 checkConnection();

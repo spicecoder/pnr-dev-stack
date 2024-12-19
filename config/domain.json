@@ -1,17 +1,9 @@
-
 {
     "name": "dev_stack",
     "env": {
         "mongodb": {
-            "url": "your mongodb connection string",
-            "options": {
-                "retryWrites": true,
-                "w": "majority"
-            }
-        },
-        "api": {
-            "port": 3000,
-            "host": "localhost"
+            "url": "mongodb://localhost:27017",
+            "options": {}
         }
     },
     "cpuxs": {
@@ -19,85 +11,106 @@
             "id": "stack_startup",
             "design_chunks": [
                 {
-                    "name": "mongodb_checker",
+                    "name": "mongodb",
                     "gatekeeper": {
                         "system_ready": {
-                            "prompt": "Is system ready for MongoDB check?",
+                            "prompt": "Is system ready?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
-                    "flowin": {},
                     "flowout": {
                         "mongodb_status": {
-                            "prompt": "Is MongoDB connected?",
+                            "prompt": "Is MongoDB running?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
-                    "command": "./scripts/check_mongodb.sh",
-                    "status": "ready"
+                    "status": "ready",
+                    "container": {
+                        "name": "pnr_mongodb",
+                        "image": "mongo:latest",
+                        "ports": {
+                            "27017": "27017"
+                        }
+                    }
                 },
                 {
-                    "name": "nodejs_server",
+                    "name": "mongodb_checker",
                     "gatekeeper": {
                         "mongodb_status": {
+                            "prompt": "Is MongoDB running?",
+                            "response": ["yes"],
+                            "tv": "Y"
+                        }
+                    },
+                    "flowout": {
+                        "mongodb_connected": {
                             "prompt": "Is MongoDB connected?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
-                    "flowin": {
-                        "mongodb_status": {
+                    "status": "ready",
+                    "container": {
+                        "name": "pnr_mongodb_checker",
+                        "image": "pnr_mongodb_checker:latest",
+                        "build_path": "nodes/mongodb"
+                    }
+                },
+                {
+                    "name": "api_server",
+                    "gatekeeper": {
+                        "mongodb_connected": {
                             "prompt": "Is MongoDB connected?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
                     "flowout": {
-                        "nodejs_status": {
-                            "prompt": "Is NodeJS API ready?",
+                        "api_ready": {
+                            "prompt": "Is API server ready?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
-                    "command": "./scripts/start_node.sh",
-                    "status": "ready"
+                    "status": "ready",
+                    "container": {
+                        "name": "pnr_api_server",
+                        "image": "pnr_api:latest",
+                        "build_path": "nodes/api",
+                        "ports": {
+                            "3000": "3000"
+                        }
+                    }
                 },
                 {
                     "name": "web_client",
                     "gatekeeper": {
-                        "nodejs_status": {
-                            "prompt": "Is NodeJS API ready?",
-                            "response": ["yes"],
-                            "tv": "Y"
-                        }
-                    },
-                    "flowin": {
-                        "nodejs_status": {
-                            "prompt": "Is NodeJS API ready?",
+                        "api_ready": {
+                            "prompt": "Is API server ready?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
                     "flowout": {
-                        "client_status": {
-                            "prompt": "Is web client running?",
+                        "client_ready": {
+                            "prompt": "Is web client ready?",
                             "response": ["yes"],
                             "tv": "Y"
                         }
                     },
-                    "command": "./scripts/start_client.sh",
-                    "status": "ready"
+                    "status": "ready",
+                    "container": {
+                        "name": "pnr_web_client",
+                        "image": "pnr_web:latest",
+                        "build_path": "nodes/client",
+                        "ports": {
+                            "80": "8080"
+                        }
+                    }
                 }
-            ],
-            "rt_state": {
-                "system_ready": {
-                    "prompt": "Is system ready for MongoDB check?",
-                    "response": ["yes"],
-                    "tv": "Y"
-                }
-            }
+            ]
         }
     }
 }

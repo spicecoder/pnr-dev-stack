@@ -1,0 +1,9 @@
+{
+    "name": "mongodb-checker",
+    "version": "1.0.0",
+    "description": "MongoDB connection checker for PnR system",
+    "main": "connection_checker.js",
+    "dependencies": {
+      "mongodb": "^4.1.0"
+    }
+  }

@@ -1,29 +1,27 @@
 // nodes/client/app.js
-async function checkHealth() {
-    const apiStatus = document.getElementById('api-status');
-    const mongoStatus = document.getElementById('mongodb-status');
-    
-    try {
-        const response = await fetch('http://localhost:3000/api/health');
-        const data = await response.json();
-        
-        if (data.status === 'ok') {
-            apiStatus.textContent = 'API Server: Connected';
-            apiStatus.className = 'status success';
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://pnr_api_server:3000')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('status').textContent = data.status;
             
-            if (data.mongodb === 'connected') {
-                mongoStatus.textContent = 'MongoDB: Connected';
-                mongoStatus.className = 'status success';
-            }
-        }
-    } catch (err) {
-        apiStatus.textContent = `API Server: Error - ${err.message}`;
-        apiStatus.className = 'status error';
-        mongoStatus.textContent = 'MongoDB: Status Unknown';
-        mongoStatus.className = 'status error';
-    }
-}
-
-// Check health immediately and every 5 seconds
-checkHealth();
-setInterval(checkHealth, 5000);
+            // Write client ready status
+            fetch('/runtime/client_status.json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "client_ready": {
+                        "prompt": "Is web client ready?",
+                        "response": ["yes"],
+                        "tv": "Y"
+                    }
+                })
+            });
+        })
+        .catch(error => {
+            document.getElementById('status').textContent = 'Error connecting to API';
+            console.error('Error:', error);
+        });
+});

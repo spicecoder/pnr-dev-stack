@@ -2,23 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PnR Stack Demo</title>
+    <title>PnR Web Client</title>
 </head>
 <body>
-    <h1>PnR Stack Demo</h1>
-    <div id="status">Checking API connection...</div>
-    
-    <script>
-        fetch('http://localhost:3000/api/health')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('status').textContent = 
-                    'Connected to API: ' + JSON.stringify(data);
-            })
-            .catch(err => {
-                document.getElementById('status').textContent = 
-                    'Error connecting to API: ' + err.message;
-            });
-    </script>
+    <h1>PnR Web Client</h1>
+    <div id="status"></div>
+    <script src="app.js"></script>
 </body>
 </html>

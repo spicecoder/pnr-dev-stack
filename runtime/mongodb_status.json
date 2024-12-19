@@ -1,0 +1,9 @@
+{
+  "mongodb_connected": {
+    "prompt": "Is MongoDB connected?",
+    "response": [
+      "yes"
+    ],
+    "tv": "Y"
+  }
+}

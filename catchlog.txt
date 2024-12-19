@@ -1,0 +1,4912 @@
+Starting PnR Container Orchestration
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: ready)
+Checking gatekeeper for mongodb
+Gatekeeper check for mongodb: true
+Container config for mongodb:
+  Name: pnr_mongodb
+  Image: mongo:latest
+  Ports: map[27017:27017]
+Attempting to start container:
+  Name: pnr_mongodb
+  Image: mongo:latest
+  BuildPath: 
+Pulling image: mongo:latest
+{"status":"Pulling from library/mongo","id":"latest"}
+{"status":"Digest: sha256:4f93a84f7d4d8b1b6cb7e0c172d8a44b0bed9b399f207165ea19473bdb5a36b0"}
+{"status":"Status: Image is up to date for mongo:latest"}
+Creating container pnr_mongodb
+
+Processing chunk: mongodb_checker (status: ready)
+Checking gatekeeper for mongodb_checker
+  Missing gatekeeper condition: mongodb_status
+Gatekeeper check for mongodb_checker: false
+
+Processing chunk: api_server (status: ready)
+Checking gatekeeper for api_server
+Gatekeeper check for api_server: true
+Container config for api_server:
+  Name: pnr_api_server
+  Image: pnr_api:latest
+  Ports: map[3000:3000]
+Attempting to start container:
+  Name: pnr_api_server
+  Image: pnr_api:latest
+  BuildPath: nodes/api
+Building image from nodes/api
+{"stream":"Step 1/7 : FROM node:16-alpine"}
+{"stream":"\n"}
+{"stream":" ---\u003e 2573171e0124\n"}
+{"stream":"Step 2/7 : WORKDIR /app"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 8913b2741e8b\n"}
+{"stream":"Step 3/7 : COPY package*.json ./"}
+{"stream":"\n"}
+{"stream":" ---\u003e 4d742b77acfe\n"}
+{"stream":"Step 4/7 : RUN npm install"}
+{"stream":"\n"}
+{"stream":" ---\u003e Running in f48cc0d14286\n"}
+{"stream":"\nadded 84 packages, and audited 85 packages in 2s\n"}
+{"stream":"\n17 packages are looking for funding\n  run `npm fund` for details\n"}
+{"stream":"\nfound 0 vulnerabilities\n"}
+{"stream":"\u001b[91mnpm notice \nnpm notice New major version of npm available! 8.19.4 -\u003e 11.0.0\nnpm notice Changelog: \u003chttps://github.com/npm/cli/releases/tag/v11.0.0\u003e\nnpm notice\u001b[0m"}
+{"stream":"\u001b[91m Run `npm install -g npm@11.0.0` to update!\nnpm notice \n\u001b[0m"}
+{"stream":" ---\u003e 712a98098144\n"}
+{"stream":"Step 5/7 : COPY server.js ./"}
+{"stream":"\n"}
+{"stream":" ---\u003e 20ae9df47a84\n"}
+{"stream":"Step 6/7 : EXPOSE 3000"}
+{"stream":"\n"}
+{"stream":" ---\u003e Running in 4c979539cb0c\n"}
+{"stream":" ---\u003e d6f564d6f8bd\n"}
+{"stream":"Step 7/7 : CMD [\"node\", \"server.js\"]"}
+{"stream":"\n"}
+{"stream":" ---\u003e Running in 15586918a4ec\n"}
+{"stream":" ---\u003e ab48448e4b3d\n"}
+{"aux":{"ID":"sha256:ab48448e4b3d03bca417640b95c95569bee6d1cbdc26e2a7d8d32ead8a1cb8eb"}}
+{"stream":"Successfully built ab48448e4b3d\n"}
+{"stream":"Successfully tagged pnr_api:latest\n"}
+Creating container pnr_api_server
+
+Processing chunk: web_client (status: ready)
+Checking gatekeeper for web_client
+  Missing gatekeeper condition: api_ready
+Gatekeeper check for web_client: false
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: executing)
+Checking completion for mongodb
+Chunk mongodb completed successfully
+
+Processing chunk: mongodb_checker (status: ready)
+Checking gatekeeper for mongodb_checker
+Gatekeeper check for mongodb_checker: true
+Container config for mongodb_checker:
+  Name: pnr_mongodb_checker
+  Image: pnr_mongodb_checker:latest
+  Ports: map[]
+Attempting to start container:
+  Name: pnr_mongodb_checker
+  Image: pnr_mongodb_checker:latest
+  BuildPath: nodes/mongodb
+Building image from nodes/mongodb
+{"stream":"Step 1/6 : FROM node:16-alpine"}
+{"stream":"\n"}
+{"stream":" ---\u003e 2573171e0124\n"}
+{"stream":"Step 2/6 : WORKDIR /app"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 8913b2741e8b\n"}
+{"stream":"Step 3/6 : COPY package.json ./"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e c0c234824d60\n"}
+{"stream":"Step 4/6 : COPY connection_checker.js ./"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e d53af44a1351\n"}
+{"stream":"Step 5/6 : RUN npm install mongodb"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e eef0833744a9\n"}
+{"stream":"Step 6/6 : CMD [\"node\", \"connection_checker.js\"]"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e a5a0cde85d26\n"}
+{"aux":{"ID":"sha256:a5a0cde85d268169d69a89ab5d8e5d90a12291401a1dcee82d8b3477a3f3b597"}}
+{"stream":"Successfully built a5a0cde85d26\n"}
+{"stream":"Successfully tagged pnr_mongodb_checker:latest\n"}
+Creating container pnr_mongodb_checker
+
+Processing chunk: api_server (status: executing)
+Checking completion for api_server
+Chunk api_server completed successfully
+
+Processing chunk: web_client (status: ready)
+Checking gatekeeper for web_client
+Gatekeeper check for web_client: true
+Container config for web_client:
+  Name: pnr_web_client
+  Image: pnr_web:latest
+  Ports: map[80:8080]
+Attempting to start container:
+  Name: pnr_web_client
+  Image: pnr_web:latest
+  BuildPath: nodes/client
+Building image from nodes/client
+{"stream":"Step 1/4 : FROM nginx:alpine"}
+{"stream":"\n"}
+{"status":"Pulling from library/nginx","id":"alpine"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"da9db072f522"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"e10e486de1ab"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"af9c0e53c5a4"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"b2eb2b8af93a"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"e351ee5ec3d4"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"fbbf7d28be71"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"471412c08d15"}
+{"status":"Pulling fs layer","progressDetail":{},"id":"a2eb5282fbec"}
+{"status":"Waiting","progressDetail":{},"id":"e351ee5ec3d4"}
+{"status":"Waiting","progressDetail":{},"id":"fbbf7d28be71"}
+{"status":"Waiting","progressDetail":{},"id":"471412c08d15"}
+{"status":"Waiting","progressDetail":{},"id":"a2eb5282fbec"}
+{"status":"Waiting","progressDetail":{},"id":"b2eb2b8af93a"}
+{"status":"Downloading","progressDetail":{"current":41609,"total":4056137},"progress":"[\u003e                                                  ]  41.61kB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":37457,"total":3623904},"progress":"[\u003e                                                  ]  37.46kB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":628,"total":628},"progress":"[==================================================\u003e]     628B/628B","id":"af9c0e53c5a4"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"af9c0e53c5a4"}
+{"status":"Download complete","progressDetail":{},"id":"af9c0e53c5a4"}
+{"status":"Downloading","progressDetail":{"current":507162,"total":4056137},"progress":"[======\u003e                                            ]  507.2kB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":380152,"total":3623904},"progress":"[=====\u003e                                             ]  380.2kB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":994552,"total":4056137},"progress":"[============\u003e                                      ]  994.6kB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":724216,"total":3623904},"progress":"[=========\u003e                                         ]  724.2kB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":1477880,"total":4056137},"progress":"[==================\u003e                                ]  1.478MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":1165580,"total":3623904},"progress":"[================\u003e                                  ]  1.166MB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":1964300,"total":4056137},"progress":"[========================\u003e                          ]  1.964MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":1657100,"total":3623904},"progress":"[======================\u003e                            ]  1.657MB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":2504972,"total":4056137},"progress":"[==============================\u003e                    ]  2.505MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":2050316,"total":3623904},"progress":"[============================\u003e                      ]   2.05MB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":3090700,"total":4056137},"progress":"[======================================\u003e            ]  3.091MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":2439436,"total":3623904},"progress":"[=================================\u003e                 ]  2.439MB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":3537164,"total":4056137},"progress":"[===========================================\u003e       ]  3.537MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":2783500,"total":3623904},"progress":"[======================================\u003e            ]  2.784MB/3.624MB","id":"da9db072f522"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"e10e486de1ab"}
+{"status":"Download complete","progressDetail":{},"id":"e10e486de1ab"}
+{"status":"Downloading","progressDetail":{"current":3275020,"total":3623904},"progress":"[=============================================\u003e     ]  3.275MB/3.624MB","id":"da9db072f522"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"da9db072f522"}
+{"status":"Download complete","progressDetail":{},"id":"da9db072f522"}
+{"status":"Extracting","progressDetail":{"current":65536,"total":3623904},"progress":"[\u003e                                                  ]  65.54kB/3.624MB","id":"da9db072f522"}
+{"status":"Extracting","progressDetail":{"current":2228224,"total":3623904},"progress":"[==============================\u003e                    ]  2.228MB/3.624MB","id":"da9db072f522"}
+{"status":"Downloading","progressDetail":{"current":720,"total":956},"progress":"[=====================================\u003e             ]     720B/956B","id":"b2eb2b8af93a"}
+{"status":"Downloading","progressDetail":{"current":956,"total":956},"progress":"[==================================================\u003e]     956B/956B","id":"b2eb2b8af93a"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"b2eb2b8af93a"}
+{"status":"Download complete","progressDetail":{},"id":"b2eb2b8af93a"}
+{"status":"Extracting","progressDetail":{"current":3623904,"total":3623904},"progress":"[==================================================\u003e]  3.624MB/3.624MB","id":"da9db072f522"}
+{"status":"Pull complete","progressDetail":{},"id":"da9db072f522"}
+{"status":"Extracting","progressDetail":{"current":65536,"total":4056137},"progress":"[\u003e                                                  ]  65.54kB/4.056MB","id":"e10e486de1ab"}
+{"status":"Extracting","progressDetail":{"current":4056137,"total":4056137},"progress":"[==================================================\u003e]  4.056MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Extracting","progressDetail":{"current":4056137,"total":4056137},"progress":"[==================================================\u003e]  4.056MB/4.056MB","id":"e10e486de1ab"}
+{"status":"Pull complete","progressDetail":{},"id":"e10e486de1ab"}
+{"status":"Extracting","progressDetail":{"current":628,"total":628},"progress":"[==================================================\u003e]     628B/628B","id":"af9c0e53c5a4"}
+{"status":"Extracting","progressDetail":{"current":628,"total":628},"progress":"[==================================================\u003e]     628B/628B","id":"af9c0e53c5a4"}
+{"status":"Pull complete","progressDetail":{},"id":"af9c0e53c5a4"}
+{"status":"Extracting","progressDetail":{"current":956,"total":956},"progress":"[==================================================\u003e]     956B/956B","id":"b2eb2b8af93a"}
+{"status":"Extracting","progressDetail":{"current":956,"total":956},"progress":"[==================================================\u003e]     956B/956B","id":"b2eb2b8af93a"}
+{"status":"Pull complete","progressDetail":{},"id":"b2eb2b8af93a"}
+{"status":"Downloading","progressDetail":{"current":405,"total":405},"progress":"[==================================================\u003e]     405B/405B","id":"e351ee5ec3d4"}
+{"status":"Download complete","progressDetail":{},"id":"e351ee5ec3d4"}
+{"status":"Extracting","progressDetail":{"current":405,"total":405},"progress":"[==================================================\u003e]     405B/405B","id":"e351ee5ec3d4"}
+{"status":"Extracting","progressDetail":{"current":405,"total":405},"progress":"[==================================================\u003e]     405B/405B","id":"e351ee5ec3d4"}
+{"status":"Pull complete","progressDetail":{},"id":"e351ee5ec3d4"}
+{"status":"Downloading","progressDetail":{"current":719,"total":1398},"progress":"[=========================\u003e                         ]     719B/1.398kB","id":"471412c08d15"}
+{"status":"Downloading","progressDetail":{"current":1398,"total":1398},"progress":"[==================================================\u003e]  1.398kB/1.398kB","id":"471412c08d15"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"471412c08d15"}
+{"status":"Download complete","progressDetail":{},"id":"471412c08d15"}
+{"status":"Downloading","progressDetail":{"current":1049,"total":1210},"progress":"[===========================================\u003e       ]  1.049kB/1.21kB","id":"fbbf7d28be71"}
+{"status":"Downloading","progressDetail":{"current":1210,"total":1210},"progress":"[==================================================\u003e]   1.21kB/1.21kB","id":"fbbf7d28be71"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"fbbf7d28be71"}
+{"status":"Download complete","progressDetail":{},"id":"fbbf7d28be71"}
+{"status":"Extracting","progressDetail":{"current":1210,"total":1210},"progress":"[==================================================\u003e]   1.21kB/1.21kB","id":"fbbf7d28be71"}
+{"status":"Extracting","progressDetail":{"current":1210,"total":1210},"progress":"[==================================================\u003e]   1.21kB/1.21kB","id":"fbbf7d28be71"}
+{"status":"Pull complete","progressDetail":{},"id":"fbbf7d28be71"}
+{"status":"Extracting","progressDetail":{"current":1398,"total":1398},"progress":"[==================================================\u003e]  1.398kB/1.398kB","id":"471412c08d15"}
+{"status":"Extracting","progressDetail":{"current":1398,"total":1398},"progress":"[==================================================\u003e]  1.398kB/1.398kB","id":"471412c08d15"}
+{"status":"Pull complete","progressDetail":{},"id":"471412c08d15"}
+{"status":"Downloading","progressDetail":{"current":151474,"total":15097607},"progress":"[\u003e                                                  ]  151.5kB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":810231,"total":15097607},"progress":"[==\u003e                                                ]  810.2kB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":1771784,"total":15097607},"progress":"[=====\u003e                                             ]  1.772MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":2906376,"total":15097607},"progress":"[=========\u003e                                         ]  2.906MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":3868936,"total":15097607},"progress":"[============\u003e                                      ]  3.869MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":4851976,"total":15097607},"progress":"[================\u003e                                  ]  4.852MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":5835016,"total":15097607},"progress":"[===================\u003e                               ]  5.835MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":6813960,"total":15097607},"progress":"[======================\u003e                            ]  6.814MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":7633160,"total":15097607},"progress":"[=========================\u003e                         ]  7.633MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":8599816,"total":15097607},"progress":"[============================\u003e                      ]    8.6MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":9406728,"total":15097607},"progress":"[===============================\u003e                   ]  9.407MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":10389768,"total":15097607},"progress":"[==================================\u003e                ]  10.39MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":11204872,"total":15097607},"progress":"[=====================================\u003e             ]   11.2MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":12347656,"total":15097607},"progress":"[========================================\u003e          ]  12.35MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":13322504,"total":15097607},"progress":"[============================================\u003e      ]  13.32MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Downloading","progressDetail":{"current":14305544,"total":15097607},"progress":"[===============================================\u003e   ]  14.31MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Verifying Checksum","progressDetail":{},"id":"a2eb5282fbec"}
+{"status":"Download complete","progressDetail":{},"id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":163840,"total":15097607},"progress":"[\u003e                                                  ]  163.8kB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":655360,"total":15097607},"progress":"[==\u003e                                                ]  655.4kB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":5079040,"total":15097607},"progress":"[================\u003e                                  ]  5.079MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":9502720,"total":15097607},"progress":"[===============================\u003e                   ]  9.503MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":12124160,"total":15097607},"progress":"[========================================\u003e          ]  12.12MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":15073280,"total":15097607},"progress":"[=================================================\u003e ]  15.07MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Extracting","progressDetail":{"current":15097607,"total":15097607},"progress":"[==================================================\u003e]   15.1MB/15.1MB","id":"a2eb5282fbec"}
+{"status":"Pull complete","progressDetail":{},"id":"a2eb5282fbec"}
+{"status":"Digest: sha256:41523187cf7d7a2f2677a80609d9caa14388bf5c1fbca9c410ba3de602aaaab4"}
+{"status":"Status: Downloaded newer image for nginx:alpine"}
+{"stream":" ---\u003e 91ca84b4f577\n"}
+{"stream":"Step 2/4 : COPY index.html /usr/share/nginx/html/"}
+{"stream":"\n"}
+{"stream":" ---\u003e f1dea34130a2\n"}
+{"stream":"Step 3/4 : COPY app.js /usr/share/nginx/html/"}
+{"stream":"\n"}
+{"stream":" ---\u003e 98b84244273a\n"}
+{"stream":"Step 4/4 : EXPOSE 80"}
+{"stream":"\n"}
+{"stream":" ---\u003e Running in 9ac79d3917fa\n"}
+{"stream":" ---\u003e 255fcd8b6891\n"}
+{"aux":{"ID":"sha256:255fcd8b6891ca5149c2fd01c1392e172afc3899d36a096a414bc969b79056ea"}}
+{"stream":"Successfully built 255fcd8b6891\n"}
+{"stream":"Successfully tagged pnr_web:latest\n"}
+Creating container pnr_web_client
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: executing)
+Checking completion for mongodb_checker
+Chunk mongodb_checker completed successfully
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
+
+Current RTState:
+nodejs_status: Y
+api_ready: Y
+mongodb_status: Y
+system_ready: Y
+client_status: Y
+mongodb_connected: Y
+
+Processing chunk: mongodb (status: completed)
+Chunk mongodb is completed
+
+Processing chunk: mongodb_checker (status: completed)
+Chunk mongodb_checker is completed
+
+Processing chunk: api_server (status: completed)
+Chunk api_server is completed
+
+Processing chunk: web_client (status: executing)
+Checking completion for web_client
+  Missing expected output: client_ready
